@@ -64,16 +64,39 @@ test(`listener receives event info and the observer entry listener(e, entry)`, t
   })
 })
 
-test(`init signature { type, position, target }`, t => {
-  t.plan(3)
+test(`init signature { type, side, position, target }`, t => {
+  t.plan(4)
   const div = Div()
   body.appendChild(div)
   const unob = observeEnterExit(div, e => {
     unob()
     body.removeChild(div)
     t.equal(e.type, 'init')
+    t.true(e.hasOwnProperty('side'))
     t.equal(typeof e.position, 'object')
     t.equal(e.target, div)
+  })
+})
+
+test('init, side is undefined when in view', t => {
+  t.plan(1)
+  const div = Div()
+  body.appendChild(div)
+  const unob = observeEnterExit(div, e => {
+    unob()
+    body.removeChild(div)
+    t.equal(e.side, undefined)
+  })
+})
+
+test('init, side is described correctly when not in view', t => {
+  t.plan(1)
+  const div = Div({ top: 10000, left: 10000 })
+  body.appendChild(div)
+  const unob = observeEnterExit(div, e => {
+    unob()
+    body.removeChild(div)
+    t.equal(e.side, 'bottom-right')
   })
 })
 
@@ -174,8 +197,8 @@ test(`if the element has even 1px within the viewport, it IS position 0`, t => {
   })
 })
 
-test(`reports { type, side } correctly for enter/exit`, t => {
-  t.plan(16)
+test(`reports { type, side, position } correctly`, t => {
+  t.plan(19)
   const div = Div()
   body.appendChild(div)
   const movements = [
@@ -263,6 +286,9 @@ test(`reports { type, side } correctly for enter/exit`, t => {
   let currentMovement
   const unob = observeEnterExit(div, e => {
     if (e.type === 'init') {
+      t.true(e.hasOwnProperty('side'))
+      t.equal(e.side, undefined)
+      t.deepEqual(e.position, { x: 0, y: 0 })
     } else {
       t.deepEqual(props([ 'type', 'side', 'position' ], e), currentMovement.result, JSON.stringify(currentMovement.result))
     }

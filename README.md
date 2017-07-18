@@ -1,6 +1,6 @@
 # enter-exit
 
-Register a listener for an element entering and exiting the viewport.
+Register a listener for an element entering and exiting the viewport or other parent element.
 
 ## install
 
@@ -90,37 +90,45 @@ observeEnterAndExit(target, (e, entry) => {
 
 ### event information
 
-#### `e.target`
-
-The target element. This is always present on the event object.
+```js
+{ type, side, position, target }
+```
 
 #### `e.type`
 
-The type of event. This property is always included.
+The type of event.
 
 ##### `type: 'init'`
 
 The listener is always called with `type: 'init'` after being registered and reports the target's starting position.
 
-```js
-{ type: 'init', position, target }
-```
-
 ##### `type: 'enter'`
 
 The listener is called with `type: enter` when the target enters `root`
-
-```js
-{ type: 'enter', side, position, target }
-```
 
 ##### `type: 'exit'`
 
 The listener is called with `type: exit` when the target exits `root`
 
-```js
-{ type: 'exit', side, position, target }
-```
+#### `e.side`
+
+A human friendly description of where the `enter` or `exit` occurred.
+
+On `init`, `side` describes where the element is in relation to the `root`. If it is already within `root`, `{ side: undefined }`
+
+Possible values:
+
+  - `'top'`
+  - `'right'`
+  - `'bottom'`
+  - `'left'`
+  - `'top-left'`
+  - `'top-right'`
+  - `'bottom-right'`
+  - `'bottom-left'`
+
+In any normal scrolling situation, an element can't enter or exit from/to a corner, so `top`, `right`, `bottom`, and `left` should usually be what you need. The others are included just in case you have a wild Friday.
+
 
 #### `e.position`
 
@@ -147,19 +155,6 @@ If the target has a single px inside of `root` on an axis, the target is conside
 { position: { x: -1, y: 1 } }
 ```
 
-#### `e.side`
+#### `e.target`
 
-A human friendly description of where the `enter` or `exit` occurred.
-
-Possible values:
-
-  - `'top'`
-  - `'right'`
-  - `'bottom'`
-  - `'left'`
-  - `'top-left'`
-  - `'top-right'`
-  - `'bottom-right'`
-  - `'bottom-left'`
-
-In any normal scrolling situation, an element can't enter or exit from/to a corner, so `top`, `right`, `bottom`, and `left` should usually be what you need. The others are included just in case you have a wild Friday.
+The target element.

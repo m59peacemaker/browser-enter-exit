@@ -1,4 +1,4 @@
-const InsularObserver = require('../insular-observer')
+const InsularObserver = require('insular-observer')
 const ifElse = (predicate, a, b) => x => predicate(x) ? a(x) : b(x)
 
 const axisLookup = {
@@ -25,6 +25,7 @@ const calcAxisPosition = (axis, { boundingClientRect, rootBounds }) => {
 }
 
 const positionDescriptions = {
+  '0,0': undefined,
   '0,-1': 'top',
   '1,0': 'right',
   '0,1': 'bottom',
@@ -47,15 +48,15 @@ const makeObservationCallback = (callback) => {
       y: calcAxisPosition('y', e)
     }
 
-    const result = { target: e.target, position, type: 'init' }
-    if (!isInit) {
-      const change = ifElse(
-        () => e.isIntersecting,
-        position => ({ type: 'enter', side: describe(lastPosition) }),
-        position => ({ type: 'exit', side: describe(position) })
-      )(position)
-      Object.assign(result, change)
-    }
+    const result = Object.assign({ target: e.target, position }, ifElse(
+      _ => isInit,
+      _ => ({ type: 'init', side: describe(position) }),
+      _ => ifElse(
+        _ => e.isIntersecting,
+        _ => ({ type: 'enter', side: describe(lastPosition) }),
+        _ => ({ type: 'exit', side: describe(position) })
+      )()
+    )())
 
     lastPosition = position
     callback(result, e)
