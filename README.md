@@ -76,6 +76,8 @@ const unobserve = observeEnterAndExit(target, listener)
 
 The DOM element to observe.
 
+**Important:** the target must be a child of `root`. If you make the observer on a `root` element and then register a listener on a `target` that is not a child of `root`, nothing is going to happen. Register listeners on children of `root`.
+
 ##### `listener`
 
 Function that receives an object with information about the event, and an [`IntersectionObserverEntry`](https://developer.mozilla.org/en-US/docs/Web/API/IntersectionObserverEntry).
