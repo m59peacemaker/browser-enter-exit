@@ -1,0 +1,35 @@
+{
+  "name": "enter-exit",
+  "version": "0.0.0",
+  "description": "Register a listener for an element entering and exiting the viewport.",
+  "main": "index.js",
+  "scripts": {
+    "test": "browserify test.js | tape-run --browser chrome"
+  },
+  "keywords": [
+    "viewport",
+    "enter",
+    "exit",
+    "visibile",
+    "position",
+    "in",
+    "out",
+    "leave",
+    "callback",
+    "listen",
+    "listener",
+    "event",
+    "observe",
+    "IntersectionObserver",
+    "browser"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/m59peacemaker/browser-enter-exit"
+  },
+  "author": "Johnny Hauser <johnnyhauser@gmail.com>",
+  "license": "CC0-1.0",
+  "devDependencies": {
+    "tape": "^4.7.0"
+  }
+}
